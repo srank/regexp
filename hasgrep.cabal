@@ -7,6 +7,7 @@ Author:              Stephen Rank
 Maintainer:          Stephen.Rank@gmail.com
 Build-Type:          Simple
 Cabal-Version:       >=1.2
-Executable haq
+Executable hasgrep
   Main-is:           Main.hs
-  Build-Depends:     base >= 3 && < 5
+  Build-Depends:     base >= 3 && < 5, haskell98
+  other-modules:     Grep

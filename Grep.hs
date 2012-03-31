@@ -1,3 +1,5 @@
+module Grep (getMatch) where
+
 matchHere :: String -> String -> Bool
 matchHere (r:rs) (x:xs)
  | r /= x = False
@@ -24,12 +26,13 @@ getMatchHere [] _ = Just []
 getMatchHere _ [] = Nothing
 
 getMatch :: String -> String -> Maybe String
-getMatch (r:rs) (x:xs)
+getMatch (rs) (x:xs)
  | isMatch here = here
- | otherwise = getMatch (r:rs) xs                                  
-                            where here = getMatchHere (r:rs) (x:xs)   
+ | otherwise = getMatch (rs) xs                                  
+                            where here = getMatchHere (rs) (x:xs)   
                                   isMatch (Just _) = True
                                   isMatch _ = False
+getMatch rs [] = Nothing                          
    
 testMatchHere = getMatch "xy" "123xy456" == Just "xy"
                 && getMatch "x.y" "xzy" == Just "xzy"
