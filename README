@@ -1,0 +1,3 @@
+Some Haskell regexp code, inspired by chapter one ("A Regular Expression
+Matcher" by Brian Kernighan) in Beautiful Code (Andy Oram and Greg Wilson,
+O'Reilly 2007).
