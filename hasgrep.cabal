@@ -1,0 +1,12 @@
+Name:                hasgrep
+Version:             0.1
+Description:         Regexp pattern matching
+License:             GPL
+License-file:        LICENSE
+Author:              Stephen Rank
+Maintainer:          Stephen.Rank@gmail.com
+Build-Type:          Simple
+Cabal-Version:       >=1.2
+Executable haq
+  Main-is:           Main.hs
+  Build-Depends:     base >= 3 && < 5
