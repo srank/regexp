@@ -15,9 +15,12 @@ matchHere _ [] = Nothing
 
 -- Match the (restricted) regexp r:rs against the string x:xs
 -- Magic characters so far: . ^
+-- To do: | () ? * + [] \ $
+-- To do even later: char classes, \W etc
 
 match :: String -> String -> Maybe String
 match regexp@(r:rs) text@(x:xs)
+ | rs != [] && head rs == '*' = matchStar r
  | r == '^' = matchHere rs text
  | isMatch here = here
  | otherwise = match regexp xs                                  
