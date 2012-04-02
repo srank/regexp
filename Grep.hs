@@ -20,7 +20,6 @@ matchHere _ [] = Nothing
 
 match :: String -> String -> Maybe String
 match regexp@(r:rs) text@(x:xs)
- | rs != [] && head rs == '*' = matchStar r
  | r == '^' = matchHere rs text
  | isMatch here = here
  | otherwise = match regexp xs                                  
