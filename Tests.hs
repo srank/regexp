@@ -1,12 +1,18 @@
 module Tests (main) where
 import Grep (match)
 
-testMatch = match "xy" "123xy456" == Just "xy"
-                && match "x.y" "xzy" == Just "xzy"
-                && match "^1234" "123456" == Just "1234"
-                && match "12^abc" "abc" == Nothing
-                && match "abc^" "abc" == Nothing
-                && match "a*" "aaa" == Just "aaa"
+tests = [("xy", "123xy456", Just "xy"),
+         ("x.y", "xzy", Just "xzy"),
+         ("^1234", "123456", Just "1234"),
+         ("12^abc", "abc", Nothing),
+         ("abc^", "abc", Nothing),
+         ("a*", "aaa", Just "aaa")]
                 
+runTests :: [(String, String, Maybe String)] -> [(String, String, Maybe String)]
+runTests [] = []
+runTests ((regexp, string, expected):tests)
+  | match regexp string == expected = runTests tests
+  | otherwise = (regexp, string, expected):runTests tests
+                                            
 main :: IO ()
-main = print testMatch
+main = print $ runTests tests
