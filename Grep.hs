@@ -3,7 +3,7 @@ module Grep (match) where
 
 matchHere :: String -> String -> Maybe String
 matchHere (r:rs) (x:xs)
- | rs /= [] && head rs == '*' = getStarMatchHere r (tail rs) (x:xs)
+ | rs /= [] && head rs == '+' = getStarMatchHere r (tail rs) (x:xs)
  | r `elem` [x, '.'] = appendMatch x result
  | otherwise = Nothing
    where result = matchHere rs xs
@@ -23,8 +23,8 @@ appendIfMatching _ Nothing = Nothing
 appendIfMatching (Just str1) (Just str2) = Just (str1 ++ str2)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
--- Magic characters so far: . ^ *
--- To do: | ? + \ $
+-- Magic characters so far: . ^ +
+-- To do: | ? + \ $ *
 -- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
