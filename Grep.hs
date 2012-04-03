@@ -4,11 +4,18 @@ module Grep (match) where
 matchHere :: String -> String -> Maybe String
 matchHere (r:rs) (x:xs)
  | rs /= [] && head rs == '+' = getPlusMatchHere r (tail rs) (x:xs)
+ | rs /= [] && head rs == '?' = getOptionalMatchHere r (tail rs) (x:xs)
  | r `elem` [x, '.'] = appendMatch x result
  | otherwise = Nothing
    where result = matchHere rs xs
 matchHere [] _ = Just []
 matchHere _ [] = Nothing        
+
+getOptionalMatchHere :: Char -> String -> String -> Maybe String
+getOptionalMatchHere r restOfRegexp (t:text)
+ | r == t = appendMaybe r $ matchHere restOfRegexp text
+ | otherwise = matchHere restOfRegexp (t:text)
+ 
 
 getPlusMatchHere :: Char -> String -> String -> Maybe String
 getPlusMatchHere char restOfRegexp string@(x:xs)         
