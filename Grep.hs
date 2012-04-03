@@ -3,15 +3,15 @@ module Grep (match) where
 
 matchHere :: String -> String -> Maybe String
 matchHere (r:rs) (x:xs)
- | rs /= [] && head rs == '+' = getStarMatchHere r (tail rs) (x:xs)
+ | rs /= [] && head rs == '+' = getPlusMatchHere r (tail rs) (x:xs)
  | r `elem` [x, '.'] = appendMatch x result
  | otherwise = Nothing
    where result = matchHere rs xs
 matchHere [] _ = Just []
 matchHere _ [] = Nothing        
 
-getStarMatchHere :: Char -> String -> String -> Maybe String
-getStarMatchHere char restOfRegexp string@(x:xs)         
+getPlusMatchHere :: Char -> String -> String -> Maybe String
+getPlusMatchHere char restOfRegexp string@(x:xs)         
   | x /= char = Nothing
   | otherwise = (Just matchingChars)  `appendIfMatching` matchHere restOfRegexp unmatchedChars
                 where matchingChars = takeWhile (==char) string
