@@ -8,7 +8,8 @@ tests = [("xy", "123xy456", Just "xy"),
          ("12^abc", "abc", Nothing),
          ("abc^", "abc", Nothing),
          ("a*", "aaa", Just "aaa"),
-         ("c*", "abccd", Just "cc")]
+         ("c*", "abccd", Just "cc"),
+         ("c*d*", "abccd", Just "ccd")]
                 
 runTests :: [(String, String, Maybe String)] -> [(String, String, Maybe String)]
 runTests [] = []

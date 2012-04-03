@@ -23,9 +23,9 @@ appendIfMatching _ Nothing = Nothing
 appendIfMatching (Just str1) (Just str2) = Just (str1 ++ str2)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
--- Magic characters so far: . ^
--- To do: | () ? * + [] \ $
--- To do even later: char classes, \W etc
+-- Magic characters so far: . ^ *
+-- To do: | ? + \ $
+-- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
 match regexp@(r:rs) text@(x:xs)
@@ -37,18 +37,8 @@ match regexp@(r:rs) text@(x:xs)
          isMatch _ = False
 match rs [] = Nothing                          
 
-matchStar :: Char -> String -> String -> Maybe String
-matchStar r rs (x:xs)
- | r == x = appendMatch r $ matchStarHere r rs xs
- | otherwise = Nothing
 
 
-matchStarHere :: Char -> String -> String -> Maybe String
-matchStarHere s rs (x:xs)
-  | s == x = appendMaybe x $ matchStarHere s rs xs
-  | otherwise = matchHere rs xs
-matchStarHere s _ [] = Just ""
-                 
 appendMatch :: Char -> Maybe String -> Maybe String
 appendMatch x Nothing = Nothing
 appendMatch x (Just xs) = Just (x:xs)                 
