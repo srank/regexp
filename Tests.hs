@@ -2,6 +2,7 @@ module Tests (main) where
 import Grep (match)
 
 tests = [("xy", "123xy456", Just "xy"),
+         ("z", "xyz", Just "z"),
          ("x.y", "xzy", Just "xzy"),
          ("^1234", "123456", Just "1234"),
          ("12^abc", "abc", Nothing),
