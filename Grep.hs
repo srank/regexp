@@ -2,6 +2,7 @@ module Grep (match) where
 
 
 matchHere :: String -> String -> Maybe String
+matchHere "$" [] = Just []
 matchHere (r:rs) (x:xs)
  | rs /= [] && head rs == '+' = getPlusMatchHere r (tail rs) (x:xs)
  | rs /= [] && head rs == '*' = getStarMatchHere r (tail rs) (x:xs)                                
@@ -44,8 +45,8 @@ appendIfMatching _ Nothing = Nothing
 appendIfMatching (Just xs) (Just ys) = Just (xs ++ ys)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
--- Magic characters so far: . ^ + ?
--- To do: | \ $ *
+-- Magic characters so far: . ^ + ? *
+-- To do: | \ $
 -- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
@@ -56,6 +57,7 @@ match regexp@(r:rs) text@(x:xs)
    where here = matchHere regexp (x:xs)   
          isMatch (Just _) = True
          isMatch _ = False
+match "$" [] = Just []
 match rs [] = Nothing                          
 
 
