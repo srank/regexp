@@ -45,8 +45,8 @@ appendIfMatching _ Nothing = Nothing
 appendIfMatching (Just xs) (Just ys) = Just (xs ++ ys)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
--- Magic characters so far: . ^ + ? *
--- To do: | \ $
+-- Magic characters so far: . ^ + ? * $
+-- To do: | \ 
 -- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
