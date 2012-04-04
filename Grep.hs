@@ -13,16 +13,19 @@ matchHere _ [] = Nothing
 
 getOptionalMatchHere :: Char -> String -> String -> Maybe String
 getOptionalMatchHere r restOfRegexp (t:text)
- | r == t = appendMaybe r $ matchHere restOfRegexp text
+ | r == t || r == '.' = appendMaybe t $ matchHere restOfRegexp text
  | otherwise = matchHere restOfRegexp (t:text)
  
 
 getPlusMatchHere :: Char -> String -> String -> Maybe String
 getPlusMatchHere char restOfRegexp string@(x:xs)         
+  | char == '.' && tryToMatchHere == Nothing = appendMatch x $ getPlusMatchHere char restOfRegexp xs
+  | char == '.' = appendMatch x tryToMatchHere
   | x /= char = Nothing
   | otherwise = (Just matchingChars)  `appendIfMatching` matchHere restOfRegexp unmatchedChars
                 where matchingChars = takeWhile (==char) string
                       unmatchedChars = dropWhile (==char) string
+                      tryToMatchHere = matchHere restOfRegexp xs
 
 appendIfMatching :: Maybe String -> Maybe String -> Maybe String
 appendIfMatching Nothing _ = Nothing
@@ -30,8 +33,8 @@ appendIfMatching _ Nothing = Nothing
 appendIfMatching (Just str1) (Just str2) = Just (str1 ++ str2)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
--- Magic characters so far: . ^ +
--- To do: | ? + \ $ *
+-- Magic characters so far: . ^ + ?
+-- To do: | + \ $ *
 -- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
