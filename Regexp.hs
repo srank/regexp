@@ -9,6 +9,13 @@ data Regexp = Literal String |
               OneOf [Regexp] |
               Optional Regexp
               
+-- query: do we need to think about matching "here" vs matching
+-- anywhere?
+-- "(x|y)z" matches "xz", "yz", "aaaxzbbb"
+-- "abc" matches "xyzabcdef"
+-- once we start matching, it has to be matchHere from then on, 
+-- I think
+
 matchRegexp :: Regexp -> String -> Maybe String
 matchRegexp (Literal r) text@(c:cs)
   | length r > length text = Nothing
