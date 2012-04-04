@@ -23,7 +23,7 @@ getPlusMatchHere :: Char -> String -> String -> Maybe String
 getPlusMatchHere char restOfRegexp string@(x:xs)         
   | char == '.' && tryToMatchHere == Nothing = appendMatch x $ getPlusMatchHere char restOfRegexp xs
   | char == '.' = appendMatch x tryToMatchHere
-  | x /= char = Nothing
+  | x /= char = Nothing -- ** only difference with Star version
   | otherwise = (Just matchingChars)  `appendIfMatching` matchHere restOfRegexp unmatchedChars
                 where matchingChars = takeWhile (==char) string
                       unmatchedChars = dropWhile (==char) string
