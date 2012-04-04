@@ -27,14 +27,14 @@ getPlusMatchHere char restOfRegexp string@(x:xs)
                       unmatchedChars = dropWhile (==char) string
                       tryToMatchHere = matchHere restOfRegexp xs
 
-appendIfMatching :: Maybe String -> Maybe String -> Maybe String
+appendIfMatching :: Maybe [a] -> Maybe [a] -> Maybe [a]
 appendIfMatching Nothing _ = Nothing
 appendIfMatching _ Nothing = Nothing
-appendIfMatching (Just str1) (Just str2) = Just (str1 ++ str2)
+appendIfMatching (Just xs) (Just ys) = Just (xs ++ ys)
 
 -- Match the (restricted) regexp r:rs against the string x:xs
 -- Magic characters so far: . ^ + ?
--- To do: | + \ $ *
+-- To do: | \ $ *
 -- To do even later: [], (), char classes, \W etc
 
 match :: String -> String -> Maybe String
@@ -49,10 +49,10 @@ match rs [] = Nothing
 
 
 
-appendMatch :: Char -> Maybe String -> Maybe String
+appendMatch :: a -> Maybe [a] -> Maybe [a]
 appendMatch x Nothing = Nothing
 appendMatch x (Just xs) = Just (x:xs)                 
 
-appendMaybe :: Char -> Maybe String -> Maybe String
+appendMaybe :: a -> Maybe [a] -> Maybe [a]
 appendMaybe x Nothing = Just (x:[])
 appendMaybe x (Just xs) = Just (x:xs)         
