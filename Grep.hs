@@ -4,6 +4,7 @@ module Grep (match) where
 matchHere :: String -> String -> Maybe String
 matchHere (r:rs) (x:xs)
  | rs /= [] && head rs == '+' = getPlusMatchHere r (tail rs) (x:xs)
+ | rs /= [] && head rs == '*' = getStarMatchHere r (tail rs) (x:xs)                                
  | rs /= [] && head rs == '?' = getOptionalMatchHere r (tail rs) (x:xs)
  | r `elem` [x, '.'] = appendMatch x result
  | otherwise = Nothing
@@ -22,6 +23,16 @@ getPlusMatchHere char restOfRegexp string@(x:xs)
   | char == '.' && tryToMatchHere == Nothing = appendMatch x $ getPlusMatchHere char restOfRegexp xs
   | char == '.' = appendMatch x tryToMatchHere
   | x /= char = Nothing
+  | otherwise = (Just matchingChars)  `appendIfMatching` matchHere restOfRegexp unmatchedChars
+                where matchingChars = takeWhile (==char) string
+                      unmatchedChars = dropWhile (==char) string
+                      tryToMatchHere = matchHere restOfRegexp xs
+
+getStarMatchHere :: Char -> String -> String -> Maybe String
+getStarMatchHere char restOfRegexp string@(x:xs)         
+  | char == '.' && tryToMatchHere == Nothing = appendMatch x $ getPlusMatchHere char restOfRegexp xs
+  | char == '.' = appendMatch x tryToMatchHere
+  | x /= char = appendMaybe x tryToMatchHere
   | otherwise = (Just matchingChars)  `appendIfMatching` matchHere restOfRegexp unmatchedChars
                 where matchingChars = takeWhile (==char) string
                       unmatchedChars = dropWhile (==char) string

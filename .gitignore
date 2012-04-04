@@ -2,3 +2,4 @@
 *.hi
 Main
 *.o
+dist

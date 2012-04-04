@@ -15,7 +15,9 @@ tests = [("xy", "123xy456", Just "xy"),
          ("c?x", "x", Just "x"),
          ("c?x", "cx", Just "cx"),
          ("a.+b", "accb", Just "accb"),
-         ("a.+", "axxx", Just "ax")
+         ("a.+", "axxx", Just "ax"),
+         ("a*b", "aab", Just "aab"),
+         ("a*b", "b", Just "b")
         ]
                 
 runTests :: [(String, String, Maybe String)] -> [(String, String, Maybe String)]
