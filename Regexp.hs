@@ -1,5 +1,6 @@
--- Data structure for regular expressions
+module Regexp (Regexp(Literal), matchRegexp, matchHere) where
 
+-- Data structure for regular expressions
 data Regexp = Literal String | 
               Or Regexp Regexp |
               OneOrMore Regexp |
@@ -8,7 +9,8 @@ data Regexp = Literal String |
               AtEnd Regexp |
               OneOf [Regexp] |
               Optional Regexp
-              
+              deriving Show
+
 -- query: do we need to think about matching "here" vs matching
 -- anywhere?
 -- "(x|y)z" matches "xz", "yz", "aaaxzbbb"
@@ -34,3 +36,6 @@ matchRegexp (AtStart x) text = Nothing
 matchRegexp (AtEnd x) text = Nothing
 matchRegexp (OneOf (r:rs)) text = Nothing
 matchRegexp (Optional r) text = Nothing
+
+matchHere :: Regexp -> String -> [(String, String)]
+matchHere (Literal l) text = []

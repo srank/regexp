@@ -1,5 +1,6 @@
 module Tests (main) where
 import Grep (match)
+import Regexp(Regexp(Literal), matchRegexp, matchHere)
 
 tests = [("xy", "123xy456", Just "xy"),
          ("z", "xyz", Just "z"),
@@ -41,5 +42,23 @@ concatMaybeString (Just s1) Nothing = Just s1
 concatMaybeString Nothing (Just s2) = Just s2
 concatMaybeString Nothing Nothing = Nothing
                                             
+
+matchHereTests :: [(Regexp, String, [(String, String)])]
+matchHereTests = [(Literal "abc", "", []),
+                  (Literal "x", "axbc", [("x", "bc")])]
+
+runNewTests = runT matchHere matchHereTests
+
+runT :: (Regexp -> String -> [(String, String)]) -> 
+        [(Regexp, String, [(String, String)])] -> 
+        [(Regexp, String, [(String, String)], [(String, String)])]
+runT f [] = []
+runT f ((r, t, expected):ss)
+  | actual == expected = runT f ss
+  | otherwise = (r, t, actual, expected): runT f ss
+    where actual = f r t
+
 main :: IO ()
-main = print $ runTests tests
+main = do
+        print $ runTests tests 
+        print runNewTests 
