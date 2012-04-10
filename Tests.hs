@@ -45,7 +45,7 @@ concatMaybeString Nothing Nothing = Nothing
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
-                  (Literal "x", "axbc", [("x", "bc")])]
+                  (Literal "x", "xbc", [("x", "bc")])]
 
 runNewTests = runT matchHere matchHereTests
 

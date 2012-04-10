@@ -38,4 +38,6 @@ matchRegexp (OneOf (r:rs)) text = Nothing
 matchRegexp (Optional r) text = Nothing
 
 matchHere :: Regexp -> String -> [(String, String)]
-matchHere (Literal l) text = []
+matchHere (Literal r) text
+  | take (length r) text == r  = [(r, drop (length r) text)]
+  | otherwise = []
