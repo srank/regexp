@@ -1,6 +1,6 @@
 module Tests (main) where
-import Grep (match)
-import Regexp(Regexp(Literal), matchRegexp, matchHere)
+import qualified Grep (match)
+import Regexp(Regexp(Literal, Or), matchHere)
 
 tests = [("xy", "123xy456", Just "xy"),
          ("z", "xyz", Just "z"),
@@ -34,7 +34,7 @@ runTests ((regexp, string, expected):tests)
   | otherwise = (regexp, string, foldl concatMaybeString Nothing
                                  [Just "expected: '", 
                                   expected, Just "', actual: '", actual, Just "'"]):runTests tests
-                where actual = match regexp string
+                where actual = Grep.match regexp string
                       
 concatMaybeString :: Maybe String -> Maybe String -> Maybe String
 concatMaybeString (Just s1) (Just s2) = Just (s1 ++ s2)
@@ -45,8 +45,10 @@ concatMaybeString Nothing Nothing = Nothing
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
-                  (Literal "x", "xbc", [("x", "bc")])]
-
+                  (Literal "x", "xbc", [("x", "bc")]),
+                  ((Or (Literal "x") (Literal ("y")), "abc", [])),
+                  ((Or (Literal "x") (Literal ("y")), "xbc", [("x", "bc")]))]
+                 
 runNewTests = runT matchHere matchHereTests
 
 runT :: (Regexp -> String -> [(String, String)]) -> 
