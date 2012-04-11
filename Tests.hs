@@ -8,7 +8,8 @@ tokeniseTests = [("xx", [Text "xx"]),
                  ("(", [OpenBracket]),
                  (")", [CloseBracket]),
                  ("^abc|de+f*$", [Start, Text "abc", Either, Text "de",
-                                  Plus, Text "f", Star, End])
+                                  Plus, Text "f", Star, End]),
+                 ("\\$12:34", [Text "$12:34"])
                 ]
 
 runTokeniseTests :: [(String, [Token])] -> [(String, [Token], [Token])]
@@ -17,6 +18,10 @@ runTokeniseTests ((text, expected):xs)
   | actual == expected = runTokeniseTests xs
   | otherwise = (text, actual, expected):runTokeniseTests xs
     where actual = tokenise text
+          
+parseTests :: [([Token], Regexp)]
+parseTests =
+  [([Text "abc"], Literal "abc")]
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
@@ -36,7 +41,8 @@ matchHereTests = [(Literal "abc", "", []),
                   (Optional (Literal "x"), "xyz", [("x", "yz")]),
                   (Optional (Literal "x"), "yz", [("", "yz")]),
                   (AtEnd (Literal "x"), "xy", []),
-                  (AtEnd (Literal "x"), "x", [("x", "")])
+                  (AtEnd (Literal "x"), "x", [("x", "")]),
+                  (AnyChar, "xyz", [("x", "yz")])
                  ]
                  
 matchTests = [(AtStart (Literal "x"), "xyz", ["x"])]

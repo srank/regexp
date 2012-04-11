@@ -1,4 +1,4 @@
-module Regexp (Regexp(Literal, 
+module Regexp (Regexp(Literal, AnyChar,
                       Or, 
                       OneOrMore, 
                       ZeroOrMore,
@@ -8,6 +8,7 @@ module Regexp (Regexp(Literal,
 
 
 data Regexp = Literal String | 
+              AnyChar |
               Or Regexp Regexp |
               OneOrMore Regexp |
               ZeroOrMore Regexp |
@@ -28,6 +29,9 @@ matchHere :: Regexp -> String -> [(String, String)]
 matchHere (Literal r) text
   | take (length r) text == r  = [(r, drop (length r) text)]
   | otherwise = []
+                
+matchHere AnyChar (t:ts)
+  = [([t], ts)]
                 
 matchHere (Or r1 r2) text
   = matchHere r1 text ++ matchHere r2 text
