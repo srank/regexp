@@ -1,7 +1,8 @@
 module Regexp (Regexp(Literal, 
                       Or, 
                       OneOrMore, 
-                      ZeroOrMore), 
+                      ZeroOrMore,
+                      Sequence), 
                matchHere) where
 
 -- Data structure for regular expressions
@@ -9,10 +10,10 @@ data Regexp = Literal String |
               Or Regexp Regexp |
               OneOrMore Regexp |
               ZeroOrMore Regexp |
+              Sequence Regexp Regexp |
+              Optional Regexp |            
               AtStart Regexp |
-              AtEnd Regexp |
-              Sequence [Regexp] |
-              Optional Regexp
+              AtEnd Regexp
               deriving Show
 
 
@@ -32,7 +33,16 @@ matchHere (OneOrMore r) text
 matchHere (ZeroOrMore r) text
   | null $ matched = [("", text)]
   | otherwise = matched ++ getMoreMatches r matched
-    where matched = matchHere r text 
+    where matched = matchHere r text
+          
+matchHere (Sequence r1 r2) text 
+  | null matchedR1 = []
+  | otherwise = f r2 matchedR1
+    where matchedR1 = matchHere r1 text
+          f regexp [] = []
+          f regexp ((match, remainder):ms)
+            | null $ matchHere regexp remainder = []
+            | otherwise = (knit match (matchHere regexp remainder)) ++ (f regexp ms)
 
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
@@ -42,6 +52,6 @@ getMoreMatches regexp ((match, remainder):mms)
   | otherwise = knit match (matchHere regexp remainder)
 knit match [] = []
 knit match ((a,b):matches)
-  = (a ++ match, b):knit match matches
+  = (match ++ a, b):knit match matches
     
           
