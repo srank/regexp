@@ -1,6 +1,6 @@
 module Tests (main) where
 import qualified Grep (match)
-import Regexp(Regexp(Literal, Or, OneOrMore, ZeroOrMore), matchHere)
+import Regexp
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
