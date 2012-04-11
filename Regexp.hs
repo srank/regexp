@@ -3,10 +3,10 @@ module Regexp (Regexp(Literal,
                       OneOrMore, 
                       ZeroOrMore,
                       Sequence,
-                      Optional, AtEnd), 
-               matchHere) where
+                      Optional, AtEnd, AtStart), 
+               matchHere, match) where
 
--- Data structure for regular expressions
+
 data Regexp = Literal String | 
               Or Regexp Regexp |
               OneOrMore Regexp |
@@ -16,6 +16,9 @@ data Regexp = Literal String |
               AtStart Regexp |
               AtEnd Regexp
               deriving Show
+
+match :: Regexp -> String -> [String]
+match (AtStart r) text = map fst $ matchHere r text
 
 
 matchHere :: Regexp -> String -> [(String, String)]

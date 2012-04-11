@@ -23,11 +23,14 @@ matchHereTests = [(Literal "abc", "", []),
                   (AtEnd (Literal "x"), "x", [("x", "")])
                  ]
                  
+matchTests = [(AtStart (Literal "x"), "xyz", ["x"])]                 
+                 
 runNewTests = runTests matchHere matchHereTests
+              
 
-runTests :: (Regexp -> String -> [(String, String)]) -> 
-        [(Regexp, String, [(String, String)])] -> 
-        [(Regexp, String, [(String, String)], [(String, String)])]
+runTests :: (Show a, Eq a) => (Regexp -> String -> a) -> 
+        [(Regexp, String, a)] -> 
+        [(Regexp, String, a, a)]
 runTests f [] = []
 runTests f ((r, t, expected):ss)
   | actual == expected = runTests f ss
@@ -38,6 +41,8 @@ main :: IO ()
 main = do
         print $ runOldTests oldTests 
         print runNewTests 
+        print $ runTests match matchTests
+
         
         
 oldTests = [("xy", "123xy456", Just "xy"),
