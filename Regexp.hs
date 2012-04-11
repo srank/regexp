@@ -2,7 +2,8 @@ module Regexp (Regexp(Literal,
                       Or, 
                       OneOrMore, 
                       ZeroOrMore,
-                      Sequence), 
+                      Sequence,
+                      Optional), 
                matchHere) where
 
 -- Data structure for regular expressions
@@ -44,6 +45,10 @@ matchHere (Sequence r1 r2) text
             | null $ matchHere regexp remainder = []
             | otherwise = (knit match $ matchHere regexp remainder) ++ (getSecondMatches regexp ms)
 
+matchHere (Optional regexp) text
+  | null matches = [("", text)]
+  | otherwise = matches
+    where matches = matchHere regexp text
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
 getMoreMatches _ [] = []

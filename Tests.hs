@@ -5,18 +5,20 @@ import Regexp
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
                   (Literal "x", "xbc", [("x", "bc")]),
-                  ((Or (Literal "x") (Literal ("y")), "abc", [])),
-                  ((Or (Literal "x") (Literal ("y")), "xbc", 
-                    [("x", "bc")])),
-                  ((OneOrMore (Literal "x")), "xxbc", 
+                  (Or (Literal "x") (Literal ("y")), "abc", []),
+                  (Or (Literal "x") (Literal ("y")), "xbc", 
+                    [("x", "bc")]),
+                  (OneOrMore (Literal "x"), "xxbc", 
                     [("x", "xbc"), ("xx", "bc")]),
-                  ((OneOrMore (Literal "x")), "yxx", []),
-                  ((ZeroOrMore (Literal "x")), "xxbc", 
+                  (OneOrMore (Literal "x"), "yxx", []),
+                  (ZeroOrMore (Literal "x"), "xxbc", 
                     [("x", "xbc"), ("xx", "bc")]),
-                  ((ZeroOrMore (Literal "x")), "yxx", [("", "yxx")]),
-                  ((Sequence (Literal "x") (Literal "z")), "xyz", []),
-                  ((Sequence (Literal "y") (Literal "z")), "xyz", []),
-                  ((Sequence (Literal "x") (Literal "y")), "xyz", [("xy", "z")])
+                  (ZeroOrMore (Literal "x"), "yxx", [("", "yxx")]),
+                  (Sequence (Literal "x") (Literal "z"), "xyz", []),
+                  (Sequence (Literal "y") (Literal "z"), "xyz", []),
+                  (Sequence (Literal "x") (Literal "y"), "xyz", [("xy", "z")]),
+                  (Optional (Literal "x"), "xyz", [("x", "yz")]),
+                  (Optional (Literal "x"), "yz", [("", "yz")])
                   ]
                  
 runNewTests = runTests matchHere matchHereTests
