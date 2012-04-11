@@ -4,7 +4,12 @@ import Regexp
 import ParseRegexp
 
 tokeniseTests :: [(String, [Token])]
-tokeniseTests = [("xx", [Text "xx"])]
+tokeniseTests = [("xx", [Text "xx"]),
+                 ("(", [OpenBracket]),
+                 (")", [CloseBracket]),
+                 ("^abc|de+f*$", [Start, Text "abc", Either, Text "de",
+                                  Plus, Text "f", Star, End])
+                ]
 
 runTokeniseTests :: [(String, [Token])] -> [(String, [Token], [Token])]
 runTokeniseTests [] = []
