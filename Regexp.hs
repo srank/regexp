@@ -37,12 +37,12 @@ matchHere (ZeroOrMore r) text
           
 matchHere (Sequence r1 r2) text 
   | null matchedR1 = []
-  | otherwise = f r2 matchedR1
+  | otherwise = getSecondMatches r2 matchedR1
     where matchedR1 = matchHere r1 text
-          f regexp [] = []
-          f regexp ((match, remainder):ms)
+          getSecondMatches regexp [] = []
+          getSecondMatches regexp ((match, remainder):ms)
             | null $ matchHere regexp remainder = []
-            | otherwise = (knit match (matchHere regexp remainder)) ++ (f regexp ms)
+            | otherwise = (knit match $ matchHere regexp remainder) ++ (getSecondMatches regexp ms)
 
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
@@ -50,6 +50,8 @@ getMoreMatches _ [] = []
 getMoreMatches regexp ((match, remainder):mms)
   | null $ matchHere regexp remainder = []
   | otherwise = knit match (matchHere regexp remainder)
+
+knit :: String -> [(String, String)] -> [(String, String)]
 knit match [] = []
 knit match ((a,b):matches)
   = (match ++ a, b):knit match matches
