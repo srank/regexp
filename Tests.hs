@@ -1,6 +1,17 @@
 module Tests (main) where
 import qualified Grep (match)
 import Regexp
+import ParseRegexp
+
+tokeniseTests :: [(String, [Token])]
+tokeniseTests = [("xx", [Text "xx"])]
+
+runTokeniseTests :: [(String, [Token])] -> [(String, [Token], [Token])]
+runTokeniseTests [] = []
+runTokeniseTests ((text, expected):xs)
+  | actual == expected = runTokeniseTests xs
+  | otherwise = (text, actual, expected):runTokeniseTests xs
+    where actual = tokenise text
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
@@ -23,8 +34,8 @@ matchHereTests = [(Literal "abc", "", []),
                   (AtEnd (Literal "x"), "x", [("x", "")])
                  ]
                  
-matchTests = [(AtStart (Literal "x"), "xyz", ["x"])]                 
-                 
+matchTests = [(AtStart (Literal "x"), "xyz", ["x"])]
+
 runNewTests = runTests matchHere matchHereTests
               
 
@@ -42,6 +53,7 @@ main = do
         print $ runOldTests oldTests 
         print runNewTests 
         print $ runTests match matchTests
+        print $ runTokeniseTests tokeniseTests
 
         
         

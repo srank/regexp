@@ -18,7 +18,10 @@ data Regexp = Literal String |
               deriving Show
 
 match :: Regexp -> String -> [String]
+match _ [] = []
 match (AtStart r) text = map fst $ matchHere r text
+match r text@(x:xs)
+  = map fst (matchHere r text) ++ match r xs
 
 
 matchHere :: Regexp -> String -> [(String, String)]
