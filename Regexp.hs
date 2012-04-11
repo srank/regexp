@@ -1,4 +1,8 @@
-module Regexp (Regexp(Literal, Or, OneOrMore), matchHere) where
+module Regexp (Regexp(Literal, 
+                      Or, 
+                      OneOrMore, 
+                      ZeroOrMore), 
+               matchHere) where
 
 -- Data structure for regular expressions
 data Regexp = Literal String | 
@@ -21,13 +25,23 @@ matchHere (Or r1 r2) text
   = matchHere r1 text ++ matchHere r2 text
     
 matchHere (OneOrMore r) text
-  | null $ matchHere r text = []
-  | otherwise = ms ++ getMoreMatches r ms
-    where ms = matchHere r text 
-          getMoreMatches _ [] = []
-          getMoreMatches regexp ((match, remainder):mms)
-            | null $ matchHere regexp remainder = []
-            | otherwise = knit match (matchHere regexp remainder)
-          knit match [] = []
-          knit match ((a,b):matches)
-            = (a ++ match, b):knit match matches
+  | null $ matched = []
+  | otherwise = matched ++ getMoreMatches r matched
+    where matched = matchHere r text 
+          
+matchHere (ZeroOrMore r) text
+  | null $ matched = [("", text)]
+  | otherwise = matched ++ getMoreMatches r matched
+    where matched = matchHere r text 
+
+
+getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
+getMoreMatches _ [] = []
+getMoreMatches regexp ((match, remainder):mms)
+  | null $ matchHere regexp remainder = []
+  | otherwise = knit match (matchHere regexp remainder)
+knit match [] = []
+knit match ((a,b):matches)
+  = (a ++ match, b):knit match matches
+    
+          
