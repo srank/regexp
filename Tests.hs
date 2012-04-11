@@ -1,6 +1,6 @@
 module Tests (main) where
 import qualified Grep (match)
-import Regexp(Regexp(Literal, Or), matchHere)
+import Regexp(Regexp(Literal, Or, OneOrMore), matchHere)
 
 tests = [("xy", "123xy456", Just "xy"),
          ("z", "xyz", Just "z"),
@@ -47,7 +47,11 @@ matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
                   (Literal "x", "xbc", [("x", "bc")]),
                   ((Or (Literal "x") (Literal ("y")), "abc", [])),
-                  ((Or (Literal "x") (Literal ("y")), "xbc", [("x", "bc")]))]
+                  ((Or (Literal "x") (Literal ("y")), "xbc", 
+                    [("x", "bc")])),
+                  ((OneOrMore (Literal "x")), "xxbc", 
+                    [("x", "xbc"), ("xx", "bc")])
+                 ]
                  
 runNewTests = runT matchHere matchHereTests
 
