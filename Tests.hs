@@ -21,7 +21,13 @@ runTokeniseTests ((text, expected):xs)
           
 parseTests :: [([Token], Regexp)]
 parseTests =
-  [([Text "abc"], Literal "abc")]
+  [([Text "abc"], Literal "abc"),
+   ([Text "xyz", Dot], Sequence (Literal "xyz") AnyChar),
+   ([Start, Text "a"], AtStart (Literal "a")),
+   ([OpenBracket, Text "abc", CloseBracket], Literal "abc"),
+   ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
+    Sequence (Literal "abc") (Literal "xyz"))   
+  ]
   
 runParseTests [] = []
 runParseTests ((tokens, expected):ps)
