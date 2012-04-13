@@ -16,7 +16,7 @@ data Regexp = Literal String |
               Optional Regexp |            
               AtStart Regexp |
               AtEnd Regexp
-              deriving Show
+              deriving (Eq, Show)
 
 match :: Regexp -> String -> [String]
 match _ [] = []

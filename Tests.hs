@@ -22,6 +22,12 @@ runTokeniseTests ((text, expected):xs)
 parseTests :: [([Token], Regexp)]
 parseTests =
   [([Text "abc"], Literal "abc")]
+  
+runParseTests [] = []
+runParseTests ((tokens, expected):ps)
+  | actual == expected = runParseTests ps
+  | otherwise = (tokens, actual, expected):runParseTests ps
+    where actual = parseRegexp tokens
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
@@ -65,7 +71,7 @@ main = do
         print runNewTests 
         print $ runTests match matchTests
         print $ runTokeniseTests tokeniseTests
-
+        print $ runParseTests parseTests
         
         
 oldTests = [("xy", "123xy456", Just "xy"),
