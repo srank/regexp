@@ -44,68 +44,11 @@ Regexp: Literal
       | Regexp '$' -- error if anything following
 -}
 
-parseRegexp :: [Token] -> Regexp
-parseRegexp input
-  = parseTopRegexp input
-    
-parseTopRegexp :: [Token] -> Regexp
-parseTopRegexp (Start:ts) = AtStart $ parseMore ts
-parseTopRegexp ts
-  = parseMore ts
-    
-parseMore :: [Token] -> Regexp    
-parseMore ((Text string):[]) = Literal string
-parseMore ((Text string):ts) = Sequence (Literal string) (parseMore ts)
-
-parseMore (Dot:xs)
-  | null xs = AnyChar
-  | otherwise = Sequence AnyChar (parseMore xs)
-                
-parseMore (OpenBracket:tokens)
-  | null remainder = regexp
-  | otherwise = Sequence regexp (parseMore remainder)
-    where (regexp, remainder) = parseInsideBracket [] tokens
-          
-parseMore x = error $ "oops " ++ show x          
-    
-parseInsideBracket :: [Token] -> [Token] -> (Regexp, [Token])
-parseInsideBracket soFar (t:ts)
-  | t == CloseBracket = (parseMore soFar, ts)
-  | t == OpenBracket && null soFar = parseInsideBracket [] ts
-  | t == OpenBracket = (Sequence (parseMore soFar) next, remains)
-  | otherwise = parseInsideBracket (soFar ++ [t]) ts
-    where (next, remains) = (parseInsideBracket [] ts)  
-
-
-
-
--- attempt to be more smart
-{-
-specialChars :: Map Char Token
-specialChars = fromList [('(', OpenBracket), 
-                (')', CloseBracket),
-                ('*', Star),
-                ('+', Plus),
-                ('?', QuestionMark),
-                ('|', Either),
-                ('^', Start),
-                ('$', End)]
-               
-tokenise' :: String -> [Token]
-tokenise' [] = []
-tokenise' (x:xs)
-  | value == Nothing = (Text (x:[])):tokenise' xs
-  | otherwise = getValue value:tokenise' xs
-    where value = Data.Map.lookup x specialChars
-          getValue (Just x) = x
-
--}
-
-tryout = [OpenBracket, Text "z", 
-            OpenBracket, Text "a", Text "x", CloseBracket, 
-          CloseBracket, 
-          Text "b"]
-simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
+match :: [Token] -> Maybe Regexp
+match input 
+ | null leftovers = result
+ | otherwise = error $ "Leftover tokens: " ++ show leftovers
+   where (result, leftovers) = matchRegexp Nothing input
 
 matchRegexp :: Maybe Regexp -> [Token] -> (Maybe Regexp, [Token])
 matchRegexp rs (Text t:ts) = 
@@ -124,3 +67,12 @@ sequenceIt :: Maybe Regexp -> Maybe Regexp -> Maybe Regexp
 sequenceIt Nothing r = r
 sequenceIt r Nothing = r
 sequenceIt (Just r1) (Just r2) = Just $ Sequence r1 r2
+
+
+-- Test data:
+
+tryout = [OpenBracket, Text "z", 
+            OpenBracket, Text "a", Text "x", CloseBracket, 
+          CloseBracket, 
+          Text "b"]
+simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
