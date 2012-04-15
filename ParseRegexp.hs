@@ -102,20 +102,25 @@ tokenise' (x:xs)
 -}
 
 tryout = [OpenBracket, Text "z", 
-            OpenBracket, Text "a", CloseBracket, 
+            OpenBracket, Text "a", Text "x", CloseBracket, 
           CloseBracket, 
           Text "b"]
 simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
 
-
-matchRegexp :: [Regexp] -> [Token] -> ([Regexp], [Token])
+matchRegexp :: Maybe Regexp -> [Token] -> (Maybe Regexp, [Token])
 matchRegexp rs (Text t:ts) = 
-  matchRegexp (rs ++ [Literal t]) ts 
+  matchRegexp (sequenceIt rs $ Just (Literal t)) ts 
                              
 matchRegexp rs (OpenBracket:ts)
   | r == CloseBracket = 
-    matchRegexp (rs ++ matched) remains
+    matchRegexp (sequenceIt rs matched) remains
   | otherwise = error "mismatched brackets"
-      where (matched, (r:remains)) = matchRegexp [] ts
+      where (matched, (r:remains)) = matchRegexp (Nothing) ts
 
 matchRegexp rs ts = (rs,ts)
+
+
+sequenceIt :: Maybe Regexp -> Maybe Regexp -> Maybe Regexp
+sequenceIt Nothing r = r
+sequenceIt r Nothing = r
+sequenceIt (Just r1) (Just r2) = Just $ Sequence r1 r2
