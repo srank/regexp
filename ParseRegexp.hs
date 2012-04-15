@@ -44,8 +44,8 @@ Regexp: Literal
       | Regexp '$' -- error if anything following
 -}
 
-match :: [Token] -> Maybe Regexp
-match input 
+parse :: [Token] -> Maybe Regexp
+parse input 
  | null leftovers = result
  | otherwise = error $ "Leftover tokens: " ++ show leftovers
    where (result, leftovers) = matchRegexp Nothing input
@@ -59,6 +59,8 @@ matchRegexp rs (OpenBracket:ts)
     matchRegexp (sequenceIt rs matched) remains
   | otherwise = error "mismatched brackets"
       where (matched, (r:remains)) = matchRegexp (Nothing) ts
+
+matchRegexp (Just rs) (Plus:ts) = matchRegexp (Just $ OneOrMore rs) ts
 
 matchRegexp rs ts = (rs,ts)
 
@@ -76,3 +78,6 @@ tryout = [OpenBracket, Text "z",
           CloseBracket, 
           Text "b"]
 simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
+
+oneOrMore = [Text "a", Plus]
+oneOrMoreBracs = [OpenBracket, Text "a", Text "b", CloseBracket, Plus]
