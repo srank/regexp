@@ -26,7 +26,9 @@ parseTests =
    ([Start, Text "a"], AtStart (Literal "a")),
    ([OpenBracket, Text "abc", CloseBracket], Literal "abc"),
    ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
-    Sequence (Literal "abc") (Literal "xyz"))   
+    Sequence (Literal "abc") (Literal "xyz")),
+   ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, CloseBracket],
+    Sequence (Literal "ww") (Literal "qq"))
   ]
   
 runParseTests [] = []

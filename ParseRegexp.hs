@@ -65,13 +65,57 @@ parseMore (OpenBracket:tokens)
   | null remainder = regexp
   | otherwise = Sequence regexp (parseMore remainder)
     where (regexp, remainder) = parseInsideBracket [] tokens
+          
+parseMore x = error $ "oops " ++ show x          
     
 parseInsideBracket :: [Token] -> [Token] -> (Regexp, [Token])
 parseInsideBracket soFar (t:ts)
   | t == CloseBracket = (parseMore soFar, ts)
---  | t == OpenBracket = 
+  | t == OpenBracket && null soFar = parseInsideBracket [] ts
+  | t == OpenBracket = (Sequence (parseMore soFar) next, remains)
   | otherwise = parseInsideBracket (soFar ++ [t]) ts
+    where (next, remains) = (parseInsideBracket [] ts)  
+
+
+parseRe :: [Token] -> [Token] -> (Regexp, [Token])
+parseRe [] (Text t:ts) = (Literal t, ts)
+parseRe soFar (Text t:ts) = (Sequence previous (Literal t), ts)
+  where (previous, remains) = parseRe [] soFar
+parseRe soFar (OpenBracket:ts) = 
+  parseInBracs [] ts 
+  where
+    parseInBracs :: [Token] -> [Token] -> (Regexp, [Token])
+--    parseInBracs soFar (CloseBracket:[]) = parseRe soFar []
+    parseInBracs soFar (CloseBracket:ts) = (reg, ts)
+      where (reg, remainder) = parseRe [] soFar
+    parseInBracs soFar (OpenBracket:ts) = 
+      (regexp, remains)
+        where (regexp, remains) = parseRe [] soFar
+    parseInBracs soFar (t:ts) = parseInBracs (soFar++[t]) ts
+
+parseRe soFar ts = error $ "> " ++ show soFar ++ ", " ++ show ts
+
+tryout = [OpenBracket, OpenBracket, Text "a", 
+                     CloseBracket, CloseBracket, Text "b"]
+simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
+
+{-getNextRe :: [Token] -> ([Token], [Token])
+getNextRe (Text t:ts) = ([Text t], ts)
+getNextRe (OpenBracket:ts)
+ = getNextBrac [] ts
+ -}
+ 
+getNextBrac :: Regexp -> [Token] -> (Regexp, [Token])   
+getNextBrac soFar (CloseBracket:ts) = (soFar, ts)
+getNextBrac soFar (Text t:ts) = 
+  getNextBrac (Sequence soFar (Literal t)) ts
   
+
+matchBrac :: Regexp -> [Token] -> (Regexp, [Token])
+matchBrac soFar (CloseBracket:ts) = (soFar, ts)
+matchBrac soFar (OpenBracket:ts) = 
+  Sequence matchBrac soFar 
+matchBrac soFar (Text t:ts) = matchBrac (Sequence soFar (Literal t)) ts
 
 -- attempt to be more smart
 {-
