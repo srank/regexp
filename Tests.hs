@@ -28,7 +28,8 @@ parseTests =
    ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
     Just $ Sequence (Literal "abc") (Literal "xyz")),
    ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, CloseBracket],
-    Just $ Sequence (Literal "ww") (Literal "qq"))
+    Just $ Sequence (Literal "ww") (Literal "qq")),
+   ([Text "ww", End], Just $ AtEnd (Literal "ww"))
   ]
   
 runParseTests [] = []
@@ -79,32 +80,3 @@ main = do
         print $ runTests match matchTests
         print $ runTokeniseTests tokeniseTests
         print $ runParseTests parseTests
-        
-        
-oldTests = [("xy", "123xy456", Just "xy"),
-         ("z", "xyz", Just "z"),
-         ("x.y", "xzy", Just "xzy"),
-         ("^1234", "123456", Just "1234"),
-         ("12^abc", "abc", Nothing),
-         ("abc^", "abc", Nothing),
-         ("a+", "aaa", Just "aaa"),
-         ("c+", "abccd", Just "cc"),
-         ("c+d+", "abccd", Just "ccd"),
-         ("c+", "x", Nothing),
-         ("c+x", "x", Nothing),
-         ("c?x", "x", Just "x"),
-         ("c?x", "cx", Just "cx"),
-         ("a.+b", "accb", Just "accb"),
-         ("a.+", "axxx", Just "ax"),
-         ("a*b", "aab", Just "aab"),
-         ("a*b", "b", Just "b"),
-         ("xx$", "xx", Just "xx"),
-         ("x$", "xyz", Nothing),
-         ("$", "abc", Just ""),
-         ("^", "xyz", Just ""),
-         (".$", "x", Just "x"),
-         (".$", "", Nothing)      
-        ]
-                
-
-                                            
