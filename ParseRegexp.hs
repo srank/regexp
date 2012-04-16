@@ -45,6 +45,12 @@ Regexp: Literal
 -}
 
 parse :: [Token] -> Maybe Regexp
+parse (Start:ts)
+  | result == Nothing = error "Parse error on Start"
+  | otherwise = Just $ AtStart (getRegexp result)
+    where result = parse ts
+          getRegexp (Just r) = r
+                   
 parse input 
  | null leftovers = result
  | otherwise = error $ "Leftover tokens: " ++ show leftovers

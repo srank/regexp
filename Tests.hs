@@ -23,7 +23,7 @@ parseTests :: [([Token], Maybe Regexp)]
 parseTests =
   [([Text "abc"], Just $ Literal "abc"),
    ([Text "xyz", Dot], Just $ Sequence (Literal "xyz") AnyChar),
---   ([Start, Text "a"], Just $ AtStart (Literal "a")),
+   ([Start, Text "a"], Just $ AtStart (Literal "a")),
    ([OpenBracket, Text "abc", CloseBracket], Just $ Literal "abc"),
    ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
     Just $ Sequence (Literal "abc") (Literal "xyz")),
