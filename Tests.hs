@@ -1,5 +1,4 @@
 module Tests (main) where
-import qualified Grep (match)
 import Regexp
 import ParseRegexp
 
