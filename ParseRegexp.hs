@@ -69,11 +69,15 @@ matchRegexp rs (OpenBracket:ts)
   | otherwise = error "mismatched brackets"
       where (matched, (r:remains)) = matchRegexp (Nothing) ts
 
-matchRegexp (Just rs) (Plus:ts) = matchRegexp (Just $ OneOrMore rs) ts
+matchRegexp (Just rs) (Plus:ts) = 
+  matchRegexp (Just $ OneOrMore rs) ts
 
 matchRegexp (Just rs) (End:ts)
   | null ts = (Just (AtEnd rs), [])
               | otherwise = error $ "After end: " ++ show ts
+
+matchRegexp (Just rs) (QuestionMark:ts) = 
+  (Just (Optional rs), ts)
 
 matchRegexp rs ts = (rs,ts)
 
