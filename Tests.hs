@@ -29,7 +29,11 @@ parseTests =
     Just $ Sequence (Literal "abc") (Literal "xyz")),
    ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, CloseBracket],
     Just $ Sequence (Literal "ww") (Literal "qq")),
-   ([Text "ww", End], Just $ AtEnd (Literal "ww"))
+   ([Text "ww", End], Just $ AtEnd (Literal "ww")),
+   ([OpenBracket, Text "z", 
+            OpenBracket, Text "a", Text "x", CloseBracket, 
+          CloseBracket, 
+          Text "b"] ,Just (Sequence (Sequence (Literal "z") (Sequence (Literal "a") (Literal "x"))) (Literal "b")))
   ]
   
 runParseTests [] = []

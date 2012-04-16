@@ -87,10 +87,7 @@ sequenceIt (Just r1) (Just r2) = Just $ Sequence r1 r2
 
 -- Test data:
 
-tryout = [OpenBracket, Text "z", 
-            OpenBracket, Text "a", Text "x", CloseBracket, 
-          CloseBracket, 
-          Text "b"]
+
 simple = [OpenBracket, Text "a", CloseBracket, Text "b"]
 
 oneOrMore = [Text "a", Plus]
