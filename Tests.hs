@@ -26,13 +26,15 @@ parseTests =
    ([OpenBracket, Text "abc", CloseBracket], Just $ Literal "abc"),
    ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
     Just $ Sequence (Literal "abc") (Literal "xyz")),
-   ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, CloseBracket],
+   ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, 
+     CloseBracket],
     Just $ Sequence (Literal "ww") (Literal "qq")),
    ([Text "ww", End], Just $ AtEnd (Literal "ww")),
    ([OpenBracket, Text "z", OpenBracket, Text "a", Text "x", 
      CloseBracket, CloseBracket, Text "b"], 
-    Just (Sequence (Sequence (Literal "z") (Sequence (Literal "a") (Literal "x"))) 
-          (Literal "b"))),
+    Just $ Sequence (Sequence (Literal "z") 
+                             (Sequence (Literal "a") (Literal "x"))) 
+          (Literal "b")),
    ([OpenBracket, Text "a", CloseBracket, Text "b"], 
     Just $ Sequence (Literal "a") (Literal "b")),
    ([OpenBracket, Text "a", Text "b", CloseBracket, Plus], 
