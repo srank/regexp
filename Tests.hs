@@ -33,7 +33,10 @@ parseTests =
    ([OpenBracket, Text "z", 
             OpenBracket, Text "a", Text "x", CloseBracket, 
           CloseBracket, 
-          Text "b"] ,Just (Sequence (Sequence (Literal "z") (Sequence (Literal "a") (Literal "x"))) (Literal "b")))
+          Text "b"] ,Just (Sequence (Sequence (Literal "z") (Sequence (Literal "a") (Literal "x"))) (Literal "b"))),
+   ([OpenBracket, Text "a", CloseBracket, Text "b"], Just $ Sequence (Literal "a") (Literal "b")),
+   ([OpenBracket, Text "a", Text "b", CloseBracket, Plus], 
+    Just $ OneOrMore (Sequence (Literal "a") (Literal "b")))
   ]
   
 runParseTests [] = []
