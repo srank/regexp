@@ -61,13 +61,13 @@ matchRegexp rs (Text t:ts) =
   matchRegexp (sequenceIt rs $ Just (Literal t)) ts 
   
 matchRegexp rs (Dot:ts) =
-  matchRegexp (sequenceIt rs $ Just (AnyChar)) ts 
+  matchRegexp (sequenceIt rs $ Just AnyChar) ts 
                              
 matchRegexp rs (OpenBracket:ts)
   | r == CloseBracket = 
     matchRegexp (sequenceIt rs matched) remains
   | otherwise = error "mismatched brackets"
-      where (matched, (r:remains)) = matchRegexp (Nothing) ts
+      where (matched, r:remains) = matchRegexp (Nothing) ts
 
 matchRegexp (Just rs) (Plus:ts) = 
   matchRegexp (Just $ OneOrMore rs) ts
@@ -77,7 +77,7 @@ matchRegexp (Just rs) (End:ts)
               | otherwise = error $ "After end: " ++ show ts
 
 matchRegexp (Just rs) (QuestionMark:ts) = 
-  (Just (Optional rs), ts)
+  (Just $ Optional rs, ts)
 
 matchRegexp rs ts = (rs,ts)
 
