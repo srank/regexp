@@ -53,6 +53,9 @@ parse input
 matchRegexp :: Maybe Regexp -> [Token] -> (Maybe Regexp, [Token])
 matchRegexp rs (Text t:ts) = 
   matchRegexp (sequenceIt rs $ Just (Literal t)) ts 
+  
+matchRegexp rs (Dot:ts) =
+  matchRegexp (sequenceIt rs $ Just (AnyChar)) ts 
                              
 matchRegexp rs (OpenBracket:ts)
   | r == CloseBracket = 

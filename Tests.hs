@@ -19,23 +19,23 @@ runTokeniseTests ((text, expected):xs)
   | otherwise = (text, actual, expected):runTokeniseTests xs
     where actual = tokenise text
           
-parseTests :: [([Token], Regexp)]
+parseTests :: [([Token], Maybe Regexp)]
 parseTests =
-  [([Text "abc"], Literal "abc"),
-   ([Text "xyz", Dot], Sequence (Literal "xyz") AnyChar),
-   ([Start, Text "a"], AtStart (Literal "a")),
-   ([OpenBracket, Text "abc", CloseBracket], Literal "abc"),
+  [([Text "abc"], Just $ Literal "abc"),
+   ([Text "xyz", Dot], Just $ Sequence (Literal "xyz") AnyChar),
+--   ([Start, Text "a"], Just $ AtStart (Literal "a")),
+   ([OpenBracket, Text "abc", CloseBracket], Just $ Literal "abc"),
    ([OpenBracket, Text "abc", CloseBracket, Text "xyz"], 
-    Sequence (Literal "abc") (Literal "xyz")),
+    Just $ Sequence (Literal "abc") (Literal "xyz")),
    ([OpenBracket, Text "ww", OpenBracket, Text "qq", CloseBracket, CloseBracket],
-    Sequence (Literal "ww") (Literal "qq"))
+    Just $ Sequence (Literal "ww") (Literal "qq"))
   ]
   
 runParseTests [] = []
 runParseTests ((tokens, expected):ps)
   | actual == expected = runParseTests ps
   | otherwise = (tokens, actual, expected):runParseTests ps
-    where actual = parseRegexp tokens
+    where actual = parse tokens
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
@@ -75,7 +75,6 @@ runTests f ((r, t, expected):ss)
 
 main :: IO ()
 main = do
-        print $ runOldTests oldTests 
         print runNewTests 
         print $ runTests match matchTests
         print $ runTokeniseTests tokeniseTests
@@ -107,18 +106,5 @@ oldTests = [("xy", "123xy456", Just "xy"),
          (".$", "", Nothing)      
         ]
                 
-runOldTests :: [(String, String, Maybe String)] -> [(String, String, Maybe String)]
-runOldTests [] = []
-runOldTests ((regexp, string, expected):tests)
-  | actual == expected = runOldTests tests
-  | otherwise = (regexp, string, foldl concatMaybeString Nothing
-                                 [Just "expected: '", 
-                                  expected, Just "', actual: '", actual, Just "'"]):runOldTests tests
-                where actual = Grep.match regexp string
-                      
-concatMaybeString :: Maybe String -> Maybe String -> Maybe String
-concatMaybeString (Just s1) (Just s2) = Just (s1 ++ s2)
-concatMaybeString (Just s1) Nothing = Just s1
-concatMaybeString Nothing (Just s2) = Just s2
-concatMaybeString Nothing Nothing = Nothing
+
                                             
