@@ -30,6 +30,7 @@ match' r text@(x:xs)
 
 
 matchHere :: Regexp -> String -> [(String, String)]
+matchHere _ [] = []
 matchHere (Literal r) text
   | take (length r) text == r  = [(r, drop (length r) text)]
   | otherwise = []
@@ -47,7 +48,7 @@ matchHere (OneOrMore r) text
           
 matchHere (ZeroOrMore r) text
   | null $ matched = [("", text)]
-  | otherwise = matched ++ getMoreMatches r matched
+  | otherwise = (("", text):matched) ++ getMoreMatches r matched
     where matched = matchHere r text
           
 matchHere (Sequence r1 r2) text 
@@ -63,9 +64,10 @@ matchHere (Optional regexp) text
   | null matches = [("", text)]
   | otherwise = matches
     where matches = matchHere regexp text
-
+          
 matchHere (AtEnd regexp) text
   = filter (null . snd) $ matchHere regexp text
+    
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
 getMoreMatches _ [] = []

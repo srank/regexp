@@ -58,7 +58,7 @@ matchHereTests = [(Literal "abc", "", []),
                     [("x", "xbc"), ("xx", "bc")]),
                   (OneOrMore (Literal "x"), "yxx", []),
                   (ZeroOrMore (Literal "x"), "xxbc", 
-                    [("x", "xbc"), ("xx", "bc")]),
+                    [("", "xxbc"), ("x", "xbc"), ("xx", "bc")]),
                   (ZeroOrMore (Literal "x"), "yxx", [("", "yxx")]),
                   (Sequence (Literal "x") (Literal "z"), "xyz", []),
                   (Sequence (Literal "y") (Literal "z"), "xyz", []),
@@ -70,7 +70,9 @@ matchHereTests = [(Literal "abc", "", []),
                   (AnyChar, "xyz", [("x", "yz")])
                  ]
                  
-matchTests = [(AtStart (Literal "x"), "xyz", ["x"])]
+matchTests = [(AtStart (Literal "x"), "xyz", ["x"]),
+              (ZeroOrMore AnyChar, "a", ["", "a"]) 
+             ]
 
 runNewTests = runTests matchHere matchHereTests
               
