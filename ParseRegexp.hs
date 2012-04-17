@@ -25,7 +25,20 @@ tokenise ('^':xs) = Start:tokenise xs
 tokenise ('$':xs) = End:tokenise xs
 tokenise ('.':xs) = Dot:tokenise xs
 tokenise xs = Text f:tokenise g
-  where (f, g) = span (\x -> not $ x `elem` specials) xs
+  where (f, g) = getFrontLiteral xs
+        
+getFrontLiteral :: String -> (String, String)
+getFrontLiteral text =
+  frontLiteral [] text
+
+    
+frontLiteral acc [] = (acc, [])
+frontLiteral acc (t:ts)
+      | t `elem` specials = (acc, t:ts)
+      | t == '\\' = frontLiteral (acc ++ [head ts]) $ tail ts
+      | otherwise = frontLiteral (acc ++ [t]) ts
+
+
 
 specials = "()*+?|^$."
 

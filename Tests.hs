@@ -8,7 +8,7 @@ tokeniseTests = [("xx", [Text "xx"]),
                  (")", [CloseBracket]),
                  ("^abc|de+f*$", [Start, Text "abc", Either, Text "de",
                                   Plus, Text "f", Star, End]),
-                 ("\\$12:34", [Text "$12:34"])
+                 ("\\$12\\.34", [Text "$12.34"])
                 ]
 
 runTokeniseTests :: [(String, [Token])] -> [(String, [Token], [Token])]
