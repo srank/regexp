@@ -72,8 +72,10 @@ matchHere (AtEnd regexp) text
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
 getMoreMatches _ [] = []
 getMoreMatches regexp ((match, remainder):mms)
-  | null $ matchHere regexp remainder = []
-  | otherwise = knit match (matchHere regexp remainder)
+  | null $ matchHere regexp remainder = getMoreMatches regexp mms
+  | otherwise = 
+    (knit match (matchHere regexp remainder)) ++ 
+    (getMoreMatches regexp $ (knit match $ matchHere regexp remainder) ++ mms)
 
 knit :: String -> [(String, String)] -> [(String, String)]
 knit match [] = []

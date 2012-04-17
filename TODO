@@ -1,2 +1,4 @@
-Character classes
-"Long" matches of *, + -- see failing tests
+* Character classes
+* Refactor interfaces -- tidy up, make exports explicit
+* Tidy up types in Regexp - use a synonym for [(String, String)]
+* Tidy up Tests - it's a bit of a mess!
