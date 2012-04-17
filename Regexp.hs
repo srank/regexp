@@ -1,9 +1,12 @@
-module Regexp (Regexp(Literal, AnyChar,
+module Regexp (Regexp(Literal, 
+                      AnyChar,
                       Or, 
                       OneOrMore, 
                       ZeroOrMore,
                       Sequence,
-                      Optional, AtEnd, AtStart), 
+                      Optional, 
+                      AtEnd, 
+                      AtStart), 
                matchHere, match) where
 
 import Data.List(nub)
@@ -81,5 +84,4 @@ knit :: String -> [(String, String)] -> [(String, String)]
 knit match [] = []
 knit match ((a,b):matches)
   = (match ++ a, b):knit match matches
-    
           

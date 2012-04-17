@@ -1,11 +1,13 @@
 module ParseRegexp where
-import Regexp(Regexp(Literal, AnyChar,
-                      Or, 
-                      OneOrMore, 
-                      ZeroOrMore,
-                      Sequence,
-                      Optional, AtEnd, AtStart),
-              match)
+import Regexp(Regexp(Literal, 
+                     AnyChar,
+                     Or, 
+                     OneOrMore, 
+                     ZeroOrMore,
+                     Sequence,
+                     Optional, 
+                     AtEnd, 
+                     AtStart))
 
 data Token = Text String |
              OpenBracket |
@@ -92,7 +94,3 @@ sequenceIt Nothing r = r
 sequenceIt r Nothing = r
 sequenceIt (Just r1) (Just r2) = Just $ Sequence r1 r2
 
-matchIt regexp  =
-  match $ getRegexp $ parse $ tokenise regexp
-  where getRegexp (Just r) = r 
-        getRegexp Nothing = error "Parse error"
