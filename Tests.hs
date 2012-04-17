@@ -71,7 +71,11 @@ matchHereTests = [(Literal "abc", "", []),
                  ]
                  
 matchTests = [(AtStart (Literal "x"), "xyz", ["x"]),
-              (ZeroOrMore AnyChar, "a", ["", "a"]) 
+              (ZeroOrMore AnyChar, "a", ["", "a"]),
+              (ZeroOrMore AnyChar, "abc",
+               ["", "a", "ab", "abc", "bc", "c"]),
+              (OneOrMore AnyChar, "abc",
+               ["a", "ab", "abc", "bc", "c"])
              ]
 
 runNewTests = runTests matchHere matchHereTests
