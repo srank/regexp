@@ -1,6 +1,6 @@
 * Character classes
 * Refactor interfaces -- tidy up, make exports explicit, use smaller modules
 * Tidy up types in Regexp - use a synonym for [(String, String)]
-* Tidy up Tests - it's a bit of a mess!
+* Tidy up Tests - it's a bit of a mess; maybe split up?
 * Error handling (everywhere!)
 * Move the type Regexp to its own module
