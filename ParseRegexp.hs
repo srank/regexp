@@ -1,5 +1,11 @@
 module ParseRegexp where
-import Regexp
+import Regexp(Regexp(Literal, AnyChar,
+                      Or, 
+                      OneOrMore, 
+                      ZeroOrMore,
+                      Sequence,
+                      Optional, AtEnd, AtStart),
+              match)
 
 data Token = Text String |
              OpenBracket |
@@ -28,34 +34,17 @@ tokenise xs = Text f:tokenise g
   where (f, g) = getFrontLiteral xs
         
 getFrontLiteral :: String -> (String, String)
-getFrontLiteral text =
-  frontLiteral [] text
+getFrontLiteral = frontLiteral [] 
 
-    
+frontLiteral :: String -> String -> (String, String)
 frontLiteral acc [] = (acc, [])
 frontLiteral acc (t:ts)
       | t `elem` specials = (acc, t:ts)
       | t == '\\' = frontLiteral (acc ++ [head ts]) $ tail ts
       | otherwise = frontLiteral (acc ++ [t]) ts
 
-
-
 specials = "()*+?|^$."
 
-{- Regexp grammar:
-TopRegexp: Regexp
-         | '^' Regexp
-         ;
-
-Regexp: Literal
-      | Dot
-      | Regexp '|' Regexp
-      | '(' Regexp ')'
-      | Regexp '+'
-      | Regexp '*'
-      | Regexp '?'
-      | Regexp '$' -- error if anything following
--}
 
 parse :: [Token] -> Maybe Regexp
 parse (Start:ts)

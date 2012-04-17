@@ -33,8 +33,8 @@ parseTests =
    ([OpenBracket, Text "z", OpenBracket, Text "a", Text "x", 
      CloseBracket, CloseBracket, Text "b"], 
     Just $ Sequence (Sequence (Literal "z") 
-                             (Sequence (Literal "a") (Literal "x"))) 
-          (Literal "b")),
+                     (Sequence (Literal "a") (Literal "x"))) 
+    (Literal "b")),
    ([OpenBracket, Text "a", CloseBracket, Text "b"], 
     Just $ Sequence (Literal "a") (Literal "b")),
    ([OpenBracket, Text "a", Text "b", CloseBracket, Plus], 
@@ -42,6 +42,7 @@ parseTests =
    ([Text "a", QuestionMark], Just $ Optional $ Literal "a")
   ]
   
+runParseTests :: [([Token], Maybe Regexp)] -> [([Token], Maybe Regexp, Maybe Regexp)]
 runParseTests [] = []
 runParseTests ((tokens, expected):ps)
   | actual == expected = runParseTests ps
@@ -78,9 +79,6 @@ matchTests = [(AtStart (Literal "x"), "xyz", ["x"]),
                ["a", "ab", "abc", "b", "bc", "c"])
              ]
 
-runNewTests = runTests matchHere matchHereTests
-              
-
 runTests :: (Show a, Eq a) => (Regexp -> String -> a) -> 
         [(Regexp, String, a)] -> 
         [(Regexp, String, a, a)]
@@ -92,7 +90,7 @@ runTests f ((r, t, expected):ss)
 
 main :: IO ()
 main = do
-        print runNewTests 
+        print $ runTests matchHere matchHereTests
         print $ runTests match matchTests
         print $ runTokeniseTests tokeniseTests
         print $ runParseTests parseTests

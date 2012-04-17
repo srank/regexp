@@ -20,13 +20,13 @@ data Regexp = Literal String |
               deriving (Eq, Show)
 
 match :: Regexp -> String -> [String]
-match regexp text = nub $ match' regexp text
+match regexp text = nub $ matchRegexp regexp text
 
-match' :: Regexp -> String -> [String]
-match' _ [] = []
-match' (AtStart r) text = map fst $ matchHere r text
-match' r text@(x:xs)
-  = map fst (matchHere r text) ++ match' r xs
+matchRegexp :: Regexp -> String -> [String]
+matchRegexp _ [] = []
+matchRegexp (AtStart r) text = map fst $ matchHere r text
+matchRegexp r text@(x:xs)
+  = map fst (matchHere r text) ++ matchRegexp r xs
 
 
 matchHere :: Regexp -> String -> [(String, String)]
