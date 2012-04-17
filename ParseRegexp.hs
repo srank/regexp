@@ -72,6 +72,9 @@ matchRegexp rs (OpenBracket:ts)
 matchRegexp (Just rs) (Plus:ts) = 
   matchRegexp (Just $ OneOrMore rs) ts
 
+matchRegexp (Just rs) (Star:ts) = 
+  matchRegexp (Just $ ZeroOrMore rs) ts
+
 matchRegexp (Just rs) (End:ts)
   | null ts = (Just (AtEnd rs), [])
               | otherwise = error $ "After end: " ++ show ts
@@ -86,3 +89,8 @@ sequenceIt :: Maybe Regexp -> Maybe Regexp -> Maybe Regexp
 sequenceIt Nothing r = r
 sequenceIt r Nothing = r
 sequenceIt (Just r1) (Just r2) = Just $ Sequence r1 r2
+
+matchIt regexp  =
+  match $ getRegexp $ parse $ tokenise regexp
+  where getRegexp (Just r) = r 
+        getRegexp Nothing = error "Parse error"

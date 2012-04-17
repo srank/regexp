@@ -10,4 +10,4 @@ Cabal-Version:       >=1.2
 Executable hasgrep
   Main-is:           Main.hs
   Build-Depends:     base >= 3 && < 5, haskell98
-  other-modules:     Grep
+  other-modules:     ParseRegexp, Regexp
