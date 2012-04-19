@@ -4,3 +4,4 @@
 * Tidy up Tests - it's a bit of a mess; maybe split up?
 * Error handling (everywhere!)
 * Move the type Regexp to its own module
+* Handle stdin rather than (or as well as) cmd line text
