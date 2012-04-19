@@ -2,7 +2,8 @@ module Main (main) where
 
 import System(getArgs)
 
-import ParseRegexp(matchIt)
+import ParseRegexp(tokenise, parse)
+import MatchRegexp(match)
 
 main :: IO ()
 main = do
@@ -11,4 +12,8 @@ main = do
       print $ "oops; only " ++ (show $ length args) ++ " args"
         else print $ matchIt (args!!0) (args!!1)
 
+matchIt regexp  =
+  match $ getRegexp $ parse $ tokenise regexp
+  where getRegexp (Just r) = r 
+        getRegexp Nothing = error "Parse error"
   

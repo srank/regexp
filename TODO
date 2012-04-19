@@ -2,6 +2,6 @@
 * Refactor interfaces -- tidy up, make exports explicit, use smaller modules
 * Tidy up types in Regexp - use a synonym for [(String, String)]
 * Tidy up Tests - it's a bit of a mess; maybe split up?
-* Error handling (everywhere!)
+* Error handling (everywhere!). I think we need a monad or two...
 * Move the type Regexp to its own module
 * Handle stdin rather than (or as well as) cmd line text
