@@ -2,6 +2,7 @@ module Tests (main) where
 import Regexp
 import ParseRegexp
 import MatchRegexp
+import Tokenise
 
 tokeniseTests :: [(String, [Token])]
 tokeniseTests = [("xx", [Text "xx"]),
