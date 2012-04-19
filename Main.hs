@@ -12,8 +12,8 @@ main = do
       print $ "oops; only " ++ (show $ length args) ++ " args"
         else print $ matchIt (args!!0) (args!!1)
 
-matchIt regexp  =
-  match $ getRegexp $ parse $ tokenise regexp
+matchIt =
+  match . getRegexp . parse . tokenise
   where getRegexp (Just r) = r 
         getRegexp Nothing = error "Parse error"
   
