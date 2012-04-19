@@ -16,35 +16,35 @@ parse (Start:ts)
 parse input 
   | null leftovers = result
   | otherwise = error $ "Leftover tokens: " ++ show leftovers
-    where (result, leftovers) = matchRegexp Nothing input
+    where (result, leftovers) = buildRegexp Nothing input
 
-matchRegexp :: Maybe Regexp -> [Token] -> (Maybe Regexp, [Token])
-matchRegexp rs (Text t:ts) = 
-  matchRegexp (sequenceIt rs $ Just (Literal t)) ts 
+buildRegexp :: Maybe Regexp -> [Token] -> (Maybe Regexp, [Token])
+buildRegexp rs (Text t:ts) = 
+  buildRegexp (sequenceIt rs $ Just (Literal t)) ts 
   
-matchRegexp rs (Dot:ts) =
-  matchRegexp (sequenceIt rs $ Just AnyChar) ts 
+buildRegexp rs (Dot:ts) =
+  buildRegexp (sequenceIt rs $ Just AnyChar) ts 
                              
-matchRegexp rs (OpenBracket:ts)
+buildRegexp rs (OpenBracket:ts)
   | r == CloseBracket = 
-    matchRegexp (sequenceIt rs matched) remains
+    buildRegexp (sequenceIt rs matched) remains
   | otherwise = error "mismatched brackets"
-      where (matched, r:remains) = matchRegexp (Nothing) ts
+      where (matched, r:remains) = buildRegexp (Nothing) ts
 
-matchRegexp (Just rs) (Plus:ts) = 
-  matchRegexp (Just $ OneOrMore rs) ts
+buildRegexp (Just rs) (Plus:ts) = 
+  buildRegexp (Just $ OneOrMore rs) ts
 
-matchRegexp (Just rs) (Star:ts) = 
-  matchRegexp (Just $ ZeroOrMore rs) ts
+buildRegexp (Just rs) (Star:ts) = 
+  buildRegexp (Just $ ZeroOrMore rs) ts
 
-matchRegexp (Just rs) (End:ts)
+buildRegexp (Just rs) (End:ts)
   | null ts = (Just (AtEnd rs), [])
   | otherwise = error $ "After end: " ++ show ts
 
-matchRegexp (Just rs) (QuestionMark:ts) = 
+buildRegexp (Just rs) (QuestionMark:ts) = 
   (Just $ Optional rs, ts)
 
-matchRegexp rs ts = (rs,ts)
+buildRegexp rs ts = (rs,ts)
 
 
 -- This is almost monadic
