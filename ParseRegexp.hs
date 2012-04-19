@@ -1,4 +1,14 @@
-module ParseRegexp where
+module ParseRegexp(parseRegexp, Token(Text,
+             OpenBracket,
+             CloseBracket,
+             Star,
+             Plus,
+             QuestionMark,
+             Either,
+             Dot,
+             Start,
+             End), parse, tokenise
+                  ) where
 import Regexp(Regexp(Literal, 
                      AnyChar,
                      Or, 
@@ -20,7 +30,10 @@ data Token = Text String |
              Start |
              End
              deriving (Eq, Show)
-             
+                      
+parseRegexp :: String -> Maybe Regexp                      
+parseRegexp = parse . tokenise
+
 tokenise :: String -> [Token]
 tokenise [] = []
 tokenise ('(':xs) = OpenBracket:tokenise xs

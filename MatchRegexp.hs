@@ -8,9 +8,8 @@ import Regexp(Regexp(Literal,
                       Sequence,
                       Optional, 
                       AtEnd, 
-                      AtStart)
-              )
-  
+                      AtStart))
+
 import Data.List(nub)
   
 match :: Regexp -> String -> [String]
@@ -45,14 +44,14 @@ matchHere (ZeroOrMore r) text
   | otherwise = (("", text):matched) ++ getMoreMatches r matched
     where matched = matchHere r text
           
-matchHere (Sequence r1 r2) text 
-  | null matchedR1 = []
-  | otherwise = getSecondMatches r2 matchedR1
-    where matchedR1 = matchHere r1 text
-          getSecondMatches regexp [] = []
-          getSecondMatches regexp ((match, remainder):ms)
-            | null $ matchHere regexp remainder = []
-            | otherwise = (knit match $ matchHere regexp remainder) ++ (getSecondMatches regexp ms)
+matchHere (Sequence first second) text 
+  | null firstMatches = []
+  | otherwise = getSecondMatches firstMatches
+    where firstMatches = matchHere first text
+          getSecondMatches [] = []
+          getSecondMatches ((match, remainder):ms)
+            | null $ matchHere second remainder = []
+            | otherwise = (knit match $ matchHere second remainder) ++ (getSecondMatches ms)
 
 matchHere (Optional regexp) text
   | null matches = [("", text)]
