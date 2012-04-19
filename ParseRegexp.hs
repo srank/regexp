@@ -54,11 +54,12 @@ getFrontLiteral = frontLiteral []
 frontLiteral :: String -> String -> (String, String)
 frontLiteral acc [] = (acc, [])
 frontLiteral acc (t:ts)
-      | t `elem` specials = (acc, t:ts)
+      | t `elem` specialChars = (acc, t:ts)
       | t == '\\' = frontLiteral (acc ++ [head ts]) $ tail ts
       | otherwise = frontLiteral (acc ++ [t]) ts
 
-specials = "()*+?|^$."
+specialChars :: [Char]
+specialChars = "()*+?|^$."
 
 
 parse :: [Token] -> Maybe Regexp
@@ -94,7 +95,7 @@ matchRegexp (Just rs) (Star:ts) =
 
 matchRegexp (Just rs) (End:ts)
   | null ts = (Just (AtEnd rs), [])
-              | otherwise = error $ "After end: " ++ show ts
+  | otherwise = error $ "After end: " ++ show ts
 
 matchRegexp (Just rs) (QuestionMark:ts) = 
   (Just $ Optional rs, ts)
@@ -102,6 +103,7 @@ matchRegexp (Just rs) (QuestionMark:ts) =
 matchRegexp rs ts = (rs,ts)
 
 
+-- This is almost monadic
 sequenceIt :: Maybe Regexp -> Maybe Regexp -> Maybe Regexp
 sequenceIt Nothing r = r
 sequenceIt r Nothing = r

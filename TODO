@@ -5,3 +5,4 @@
 * Error handling (everywhere!). I think we need a monad or two...
 * Move the type Regexp to its own module
 * Handle stdin rather than (or as well as) cmd line text
+* Split parsing and tokenising into separate modules
