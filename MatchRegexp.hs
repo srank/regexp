@@ -18,7 +18,7 @@ match regexp text = nub $ matchRegexp regexp text
 matchRegexp :: Regexp -> String -> [String]
 matchRegexp _ [] = []
 matchRegexp (AtStart r) text = map fst $ matchHere r text
-matchRegexp r text@(x:xs)
+matchRegexp r text@(_:xs)
   = map fst (matchHere r text) ++ matchRegexp r xs
 
 
@@ -47,9 +47,9 @@ matchHere (Sequence first second) text
   | otherwise = getSecondMatches firstMatches
     where firstMatches = matchHere first text
           getSecondMatches [] = []
-          getSecondMatches ((match, remainder):ms)
+          getSecondMatches ((matched, remainder):ms)
             | null $ matchHere second remainder = []
-            | otherwise = knit match (matchHere second remainder) ++ 
+            | otherwise = knit matched (matchHere second remainder) ++ 
                           getSecondMatches ms
 
 matchHere (Optional regexp) text
@@ -63,14 +63,14 @@ matchHere (AtEnd regexp) text
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
 getMoreMatches _ [] = []
-getMoreMatches regexp ((match, remainder):mms)
+getMoreMatches regexp ((matched, remainder):mms)
   | null $ matchHere regexp remainder = getMoreMatches regexp mms
   | otherwise = 
-    knit match (matchHere regexp remainder) ++ 
-    getMoreMatches regexp (knit match (matchHere regexp remainder) ++ mms)
+    knit matched (matchHere regexp remainder) ++ 
+    getMoreMatches regexp (knit matched (matchHere regexp remainder) ++ mms)
 
 knit :: String -> [(String, String)] -> [(String, String)]
-knit match [] = []
-knit match ((a,b):matches)
-  = (match ++ a, b):knit match matches
+knit _ [] = []
+knit matched ((a,b):matches)
+  = (matched ++ a, b):knit matched matches
           

@@ -1,7 +1,7 @@
 module TokeniseTests(tokeniserTests) where
 import Tokenise
 
-
+tokeniserTests :: [(String, [Token], [Token])]
 tokeniserTests = runTokeniseTests tokeniseTests
 
 tokeniseTests :: [(String, [Token])]

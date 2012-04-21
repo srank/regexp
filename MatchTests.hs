@@ -31,7 +31,8 @@ matchHereTests = [(Literal "abc", "", []),
                   (AtEnd (Literal "x"), "x", [("x", "")]),
                   (AnyChar, "xyz", [("x", "yz")])
                  ]
-                 
+
+matchTests :: [(Regexp, String, [String])]
 matchTests = [(AtStart (Literal "x"), "xyz", ["x"]),
               (ZeroOrMore AnyChar, "a", ["", "a"]),
               (ZeroOrMore AnyChar, "abc",
@@ -43,7 +44,7 @@ matchTests = [(AtStart (Literal "x"), "xyz", ["x"]),
 runTests :: (Show a, Eq a) => (Regexp -> String -> a) -> 
         [(Regexp, String, a)] -> 
         [(Regexp, String, a, a)]
-runTests f [] = []
+runTests _ [] = []
 runTests f ((r, t, expected):ss)
   | actual == expected = runTests f ss
   | otherwise = (r, t, actual, expected): runTests f ss

@@ -12,6 +12,7 @@ parse (Start:ts)
   | otherwise = Just $ AtStart (getRegexp result)
     where result = parse ts
           getRegexp (Just r) = r
+          getRegexp Nothing = error "no regexp defined"
                    
 parse input 
   | null leftovers = result

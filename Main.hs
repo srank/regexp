@@ -13,6 +13,7 @@ main = do
         else print $ matchIt (head args) (args!!1)
 
 -- TODO: this is nearly monadic enough...
+matchIt :: String -> String -> [String]
 matchIt =
   match . getRegexp . parseRegexp
   where getRegexp (Just r) = r 
