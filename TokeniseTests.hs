@@ -1,4 +1,4 @@
-module TokeniseTests where
+module TokeniseTests(tokeniserTests) where
 import Tokenise
 
 
