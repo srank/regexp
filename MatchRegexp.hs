@@ -39,11 +39,9 @@ matchHere (OneOrMore r) text
   | otherwise = matched ++ getMoreMatches r matched
     where matched = matchHere r text 
           
-matchHere (ZeroOrMore r) text
-  | null $ matched = [("", text)]
-  | otherwise = (("", text):matched) ++ getMoreMatches r matched
-    where matched = matchHere r text
-          
+matchHere (ZeroOrMore r) text = 
+  ("", text):matchHere (OneOrMore r) text
+
 matchHere (Sequence first second) text 
   | null firstMatches = []
   | otherwise = getSecondMatches firstMatches
