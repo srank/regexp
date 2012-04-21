@@ -1,7 +1,7 @@
 module MatchTests(matchHereTestResults, matchTestResults) where
 
 import Regexp
-import MatchRegexp
+import MatchRegexp(matchHere, match)
 
 matchHereTestResults :: 
   [(Regexp, String, [(String, String)], [(String, String)])]

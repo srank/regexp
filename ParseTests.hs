@@ -1,7 +1,7 @@
 module ParseTests(parseTestResults) where
 
 import Regexp
-import ParseRegexp
+import ParseRegexp(parse)
 import Tokenise
 
 
