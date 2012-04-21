@@ -1,8 +1,13 @@
-module ParseTests where
+module ParseTests(parseTestResults) where
 
 import Regexp
 import ParseRegexp
 import Tokenise
+
+parseTestResults :: [([Token], Maybe Regexp, Maybe Regexp)]
+parseTestResults = runParseTests parseTests
+          
+
 
 parseTests :: [([Token], Maybe Regexp)]
 parseTests =
@@ -28,7 +33,8 @@ parseTests =
    ([Text "a", QuestionMark], Just $ Optional $ Literal "a")
   ]
   
-runParseTests :: [([Token], Maybe Regexp)] -> [([Token], Maybe Regexp, Maybe Regexp)]
+runParseTests :: [([Token], Maybe Regexp)] -> 
+                 [([Token], Maybe Regexp, Maybe Regexp)]
 runParseTests [] = []
 runParseTests ((tokens, expected):ps)
   | actual == expected = runParseTests ps
