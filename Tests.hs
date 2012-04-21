@@ -1,4 +1,4 @@
-module Tests (main) where
+module Tests(main) where
 
 import TokeniseTests(tokeniserTests)
 import ParseTests(parseTestResults)

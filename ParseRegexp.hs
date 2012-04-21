@@ -29,7 +29,7 @@ buildRegexp rs (OpenBracket:ts)
   | r == CloseBracket = 
     buildRegexp (sequenceIt rs matched) remains
   | otherwise = error "mismatched brackets"
-      where (matched, r:remains) = buildRegexp (Nothing) ts
+      where (matched, r:remains) = buildRegexp Nothing ts
 
 buildRegexp (Just rs) (Plus:ts) = 
   buildRegexp (Just $ OneOrMore rs) ts
@@ -44,7 +44,7 @@ buildRegexp (Just rs) (End:ts)
 buildRegexp (Just rs) (QuestionMark:ts) = 
   (Just $ Optional rs, ts)
 
-buildRegexp rs ts = (rs,ts)
+buildRegexp rs ts = (rs, ts)
 
 
 -- This is almost monadic

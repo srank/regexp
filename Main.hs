@@ -9,8 +9,8 @@ main :: IO ()
 main = do
   args <- getArgs
   if length args < 2 then 
-      print $ "oops; only " ++ (show $ length args) ++ " args"
-        else print $ matchIt (args!!0) (args!!1)
+      print $ "oops; only " ++ show (length args) ++ " args"
+        else print $ matchIt (head args) (args!!1)
 
 -- TODO: this is nearly monadic enough...
 matchIt =

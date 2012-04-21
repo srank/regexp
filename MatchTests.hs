@@ -13,8 +13,8 @@ matchTestResults = runTests match matchTests
 matchHereTests :: [(Regexp, String, [(String, String)])]
 matchHereTests = [(Literal "abc", "", []),
                   (Literal "x", "xbc", [("x", "bc")]),
-                  (Or (Literal "x") (Literal ("y")), "abc", []),
-                  (Or (Literal "x") (Literal ("y")), "xbc", 
+                  (Or (Literal "x") (Literal "y"), "abc", []),
+                  (Or (Literal "x") (Literal "y"), "xbc", 
                     [("x", "bc")]),
                   (OneOrMore (Literal "x"), "xxbc", 
                     [("x", "xbc"), ("xx", "bc")]),
