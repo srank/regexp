@@ -1,13 +1,13 @@
 module Tests (main) where
 
 import TokeniseTests(tokeniserTests)
-import ParseTests
-import MatchTests(matcHereTestResults, matchTestResults)
+import ParseTests(parseTestResults)
+import MatchTests(matchHereTestResults, matchTestResults)
 
 
 main :: IO ()
 main = do
-        print matcHereTestResults
+        print matchHereTestResults
         print matchTestResults 
         print tokeniserTests 
         print parseTestResults

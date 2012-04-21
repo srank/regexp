@@ -4,10 +4,9 @@ import Regexp
 import ParseRegexp
 import Tokenise
 
+
 parseTestResults :: [([Token], Maybe Regexp, Maybe Regexp)]
 parseTestResults = runParseTests parseTests
-          
-
 
 parseTests :: [([Token], Maybe Regexp)]
 parseTests =
@@ -40,4 +39,3 @@ runParseTests ((tokens, expected):ps)
   | actual == expected = runParseTests ps
   | otherwise = (tokens, actual, expected):runParseTests ps
     where actual = parse tokens
-

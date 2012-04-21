@@ -1,9 +1,13 @@
-module MatchTests(matcHereTestResults, matchTestResults) where
+module MatchTests(matchHereTestResults, matchTestResults) where
 
 import Regexp
 import MatchRegexp
 
-matcHereTestResults = runTests matchHere matchHereTests
+matchHereTestResults :: 
+  [(Regexp, String, [(String, String)], [(String, String)])]
+matchHereTestResults = runTests matchHere matchHereTests
+
+matchTestResults :: [(Regexp, String, [String], [String])]
 matchTestResults = runTests match matchTests
 
 matchHereTests :: [(Regexp, String, [(String, String)])]
