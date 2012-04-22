@@ -57,9 +57,11 @@ matchHere (Optional regexp) text
   | otherwise = matches
     where matches = matchHere regexp text
           
-matchHere (AtEnd regexp) text
-  = filter (null . snd) $ matchHere regexp text
+matchHere (AtEnd regexp) text =
+  filter (null . snd) $ matchHere regexp text
     
+matchHere (AtStart regexp) _ =
+  error "Misuse of ^"
 
 getMoreMatches :: Regexp -> [(String, String)] -> [(String, String)]
 getMoreMatches _ [] = []
