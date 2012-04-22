@@ -1,6 +1,6 @@
 * Character classes
 * Refactor interfaces -- tidy up, make exports explicit, use smaller modules
-* Tidy up types in Regexp - use a synonym for [(String, String)]
+* Tidy up types in MatchRegexp - use a synonym for [(String, String)]
 * Error handling (everywhere!). I think we need a monad or two...
 * Handle stdin rather than (or as well as) cmd line text
 * We don't have a pattern match for matchHere (AtStart x) text in MatchRegexp
